@@ -56,7 +56,11 @@ const AppHeader = () => {
         <Button
           type="primary"
           icon={<ShareAltOutlined />}
-          style={{ marginRight: "10px" }}
+          style={{
+            marginRight: "10px",
+            backgroundColor: "rgb(155, 89, 182)",
+            borderColor: "rgb(155, 89, 182)",
+          }}
         >
           Share a movie
         </Button>
