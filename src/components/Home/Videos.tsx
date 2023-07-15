@@ -1,17 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, List, Skeleton, Space } from "antd";
+import {
+  Card,
+  Button,
+  List,
+  Skeleton,
+  Space,
+  Col,
+  Row,
+  Typography,
+} from "antd";
 import { LikeOutlined, DislikeOutlined } from "@ant-design/icons";
-import { PostDataType, EdgesDataType } from "../../common/app-model";
+import {
+  PostDataType,
+  EdgesDataType,
+  RFMReactType,
+} from "../../common/app-model";
 import postService from "../../services/post.service";
 import appNotify from "../../common/app-notify";
-import { toast } from "react-toastify";
+import YoutubeEmbed from "../Common/YoutubeEmbed";
+const { Paragraph, Text } = Typography;
 
 const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
-  <Space>
-    {React.createElement(icon)}
-    {text}
-  </Space>
+  <div>
+    <b>{text}</b> {React.createElement(icon)}
+  </div>
 );
+const gridStyle: React.CSSProperties = {
+  width: "25%",
+};
 
 const Videos = () => {
   const [initLoading, setInitLoading] = useState(true);
@@ -30,8 +46,9 @@ const Videos = () => {
       })
       .catch((err) => {
         console.log(err);
-        appNotify.notifyError("Loading posts error!!!");
+        appNotify.notify("Loading posts error!!!", "error");
       });
+    return () => {};
   }, []);
 
   const onLoadMore = () => {
@@ -44,6 +61,7 @@ const Videos = () => {
           node: {
             author: {},
           },
+          postLikes: [],
         }))
       )
     );
@@ -61,7 +79,7 @@ const Videos = () => {
         window.dispatchEvent(new Event("resize"));
       })
       .catch((err) => {
-        appNotify.notifyError("Loading posts error!!!");
+        appNotify.notify("Loading posts error!!!", "error");
       });
   };
 
@@ -75,7 +93,7 @@ const Videos = () => {
           lineHeight: "32px",
         }}
       >
-        <Button onClick={onLoadMore}>Loading more...</Button>
+        <Button onClick={onLoadMore}>Load more...</Button>
       </div>
     ) : null;
 
@@ -85,43 +103,72 @@ const Videos = () => {
       loading={initLoading}
       itemLayout="vertical"
       size="large"
+      style={{ width: "72%" }}
+      split={false}
       loadMore={loadMore}
       dataSource={list}
       renderItem={(item) => (
         <List.Item>
           <Skeleton avatar title={false} loading={item.loading} active>
-            <List.Item
-              key={item.node.id}
-              actions={[
-                <IconText
-                  icon={LikeOutlined}
-                  text="156"
-                  key="list-vertical-like-o"
-                />,
-                <IconText
-                  icon={DislikeOutlined}
-                  text="2"
-                  key="list-vertical-dislike-o"
-                />,
-              ]}
-              style={{}}
-              extra={
-                <img
-                  width={272}
-                  alt="logo"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+            <Card hoverable>
+              <Card.Grid style={gridStyle}>
+                <YoutubeEmbed
+                  src={item.node?.link || ""}
+                  title={item.node?.title || "No title"}
                 />
-              }
-              
-            >
-              <List.Item.Meta
-              prefixCls="aaaaa"
-                title={<a href={item.node.link}>{item.node?.title}</a>}
-                description={item.node.content}
-                children={(<div>aaaa</div>)}
-              />
-              {item.node.content}
-            </List.Item>
+              </Card.Grid>
+              <Card.Grid style={{ width: "75%" }} hoverable={false}>
+                <Row>
+                  <Col span={24}>
+                    <Text
+                      type="danger"
+                      style={{ fontWeight: "bold", fontSize: "15px" }}
+                    >
+                      {item.node?.title}
+                    </Text>
+                    <br />
+                    <Text style={{ fontWeight: "bold" }}>
+                      Share by: {item.node?.author.email}
+                    </Text>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Space size={"large"}>
+                      <IconText
+                        icon={LikeOutlined}
+                        text={
+                          item.node?.postLikes
+                            ?.filter((pl) => pl.type === RFMReactType.LIKE)
+                            .length.toString() || "0"
+                        }
+                        key="list-vertical-like-o"
+                      />
+                      <IconText
+                        icon={DislikeOutlined}
+                        text={
+                          item.node?.postLikes
+                            ?.filter((pl) => pl.type === RFMReactType.DISLIKE)
+                            .length.toString() || "0"
+                        }
+                        key="list-vertical-dislike-o"
+                      />
+                    </Space>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <Text style={{}}>Description:</Text>
+                    <br />
+                    <Paragraph
+                      ellipsis={{ rows: 3, expandable: true, symbol: "more" }}
+                    >
+                      {item.node.content}
+                    </Paragraph>
+                  </Col>
+                </Row>
+              </Card.Grid>
+            </Card>
           </Skeleton>
         </List.Item>
       )}

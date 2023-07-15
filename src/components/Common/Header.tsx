@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Button, Layout, Typography } from "antd";
+import { Button, Layout, Typography, Space } from "antd";
 import Icon, { ShareAltOutlined, LogoutOutlined } from "@ant-design/icons";
 import type { CustomIconComponentProps } from "@ant-design/icons/lib/components/Icon";
 import { PandaSvg } from "../../common/app-icons";
@@ -20,6 +20,9 @@ const AppHeader = () => {
     localStorage.clear();
     navigate("/login");
   };
+  const goToShare = () => {
+    navigate("/share");
+  };
 
   return (
     <Header
@@ -30,44 +33,44 @@ const AppHeader = () => {
         color: "rgb(255, 255, 255)",
       }}
     >
-      <div>
+      <Space>
+        <PandaIcon style={{ fontSize: "36px", marginTop: "12px" }} />
         <Title
           className="App-color-white"
-          level={3}
-          style={{ marginTop: "15px" }}
+          level={1}
+          style={{ marginTop: "5px" }}
         >
-          <PandaIcon style={{ fontSize: "32px", marginRight: "10px" }} />
           Funny Movies
         </Title>
-      </div>
+      </Space>
       <div>
         <Title
           className="App-color-white"
           level={4}
           style={{ marginTop: "15px" }}
         >
-          Remitano
+          {/* Remitano */}
         </Title>
       </div>
-      <div>
-        <Text style={{ marginRight: "10px" }} className="App-color-white">
-          Welcome {currentUser.user.email}{" "}
+      <Space size={"small"}>
+        <Text className="App-color-white">
+          Welcome <b>{currentUser.user.email} </b>
         </Text>
         <Button
           type="primary"
           icon={<ShareAltOutlined />}
           style={{
-            marginRight: "10px",
             backgroundColor: "rgb(155, 89, 182)",
             borderColor: "rgb(155, 89, 182)",
           }}
+          onClick={goToShare}
         >
           Share a movie
         </Button>
         <Button type="dashed" icon={<LogoutOutlined />} danger onClick={logout}>
           Logout
         </Button>
-      </div>
+      </Space>
     </Header>
   );
 };

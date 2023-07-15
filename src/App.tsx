@@ -5,6 +5,7 @@ import PrivateRoute from "./common/private-route";
 import Home from "./components/Home";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
+import Share from "./components/Share";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<PrivateRoute />}>
           <Route path="/" element={<Home />} />
+          <Route path="/share" element={<Share />} />
         </Route>
         {/* <RestrictedRoute exact path="/login" Component={Login} /> */}
         <Route path="/login" Component={Login} />

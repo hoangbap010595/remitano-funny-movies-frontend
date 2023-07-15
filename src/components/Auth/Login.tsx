@@ -1,100 +1,129 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Card, Form, Input, Button, Checkbox, Typography } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { ToastContainer, Flip } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
 import authService from "../../services/auth.service";
-import appNotify from "../../common/app-notify"
+import appNotify from "../../common/app-notify";
+import "react-toastify/dist/ReactToastify.min.css";
+import { useState } from "react";
+const { Title } = Typography;
 
 const Login = (): JSX.Element => {
+  const [buttonLoginLoading, setButtonLoginLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  const login = (data: any) => {
+  const onFinish = (values: any) => {
+    setButtonLoginLoading(true);
+    console.log("Received values of form: ", values);
     authService
-      .login(data.email, data.password)
+      .login(values.email, values.password)
       .then((response: any) => {
         console.log(response);
         if (!response.data) {
-            appNotify.notifyError(response.errors[0].message);
+          appNotify.notify(response.errors[0].message, "error");
         }
-        appNotify.notifySuccess("Login successfully!");
-        authService.setCurrentUser(response.data.login)
+        appNotify.notify("Login successfully!", "success");
+        authService.setCurrentUser(response.data.login);
         navigate("/");
       })
       .catch((err) => {
         console.log(err);
-        appNotify.notifyError("Login Error!!!");
+        appNotify.notify("Login Error!!!", "error");
+      })
+      .finally(() => {
+        setButtonLoginLoading(false);
       });
   };
 
   return (
-    <>
-      <div className="container">
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundImage: "url(bg-login2.jpg)",
+        backgroundSize: "cover"
+      }}
+    >
+      <Card hoverable style={{ width: 400, backgroundColor: "#f4f4f4" }}>
         <div
-          className="row d-flex justify-content-center align-items-center"
-          style={{ height: "100vh" }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "20px",
+          }}
         >
-          <div className="card mb-3" style={{ maxWidth: "320px" }}>
-            <div className="col-md-12">
-              <div className="card-body">
-                <h3 className="card-title text-center text-secondary mt-3">
-                  Login Form
-                </h3>
-                <form autoComplete="off" onSubmit={handleSubmit(login)}>
-                  <div className="mb-3 mt-4">
-                    <label className="form-label">Email</label>
-                    <input
-                      type="email"
-                      className="form-control shadow-none"
-                      id="exampleFormControlInput1"
-                      {...register("email", { required: "Email is required!" })}
-                    />
-                    {errors.email && (
-                      <p className="text-danger" style={{ fontSize: 14 }}>
-                        {/* {errors.email.message || "a"} */}
-                      </p>
-                    )}
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Password</label>
-                    <input
-                      type="password"
-                      className="form-control shadow-none"
-                      id="exampleFormControlInput2"
-                      {...register("password", {
-                        required: "Password is required!",
-                      })}
-                    />
-                    {errors.password && (
-                      <p className="text-danger" style={{ fontSize: 14 }}>
-                        {/* {errors.password.message} */}
-                      </p>
-                    )}
-                  </div>
-                  <div className="text-center mt-4 ">
-                    <button
-                      className="btn btn-outline-primary text-center shadow-none mb-3"
-                      type="submit"
-                    >
-                      Submit
-                    </button>
-                    <p className="card-text pb-2">
-                      Have an Account?{" "}
-                      <Link style={{ textDecoration: "none" }} to={"/register"}>
-                        Sign Up
-                      </Link>
-                    </p>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+          <Title level={2}>REMITANO </Title>
         </div>
-      </div>
+        <Form
+          name="normal_login"
+          className="login-form"
+          initialValues={{
+            remember: true,
+          }}
+          onFinish={onFinish}
+        >
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Email!",
+              },
+            ]}
+          >
+            <Input
+              type="email"
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Enter your email"
+            />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Password!",
+              },
+            ]}
+          >
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Password"
+            />
+          </Form.Item>
+          <Form.Item>
+            <Form.Item name="remember" valuePropName="checked" noStyle>
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="App-button-primary"
+              block
+              loading={buttonLoginLoading}
+            >
+              Log in
+            </Button>
+          </Form.Item>
+          <Form.Item
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "20px",
+            }}
+          >
+            Have an Account?{" "}
+            <Link style={{ textDecoration: "none" }} to={"/register"}>
+              Sign Up
+            </Link>
+          </Form.Item>
+        </Form>
+      </Card>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -107,7 +136,7 @@ const Login = (): JSX.Element => {
         limit={1}
         transition={Flip}
       />
-    </>
+    </div>
   );
 };
 export default Login;

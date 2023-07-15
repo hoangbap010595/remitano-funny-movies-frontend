@@ -1,13 +1,14 @@
 import axios from "axios";
 import authHeader from "./auth-header";
-const API_URL = "http://localhost:3000/graphql";
+const { REACT_APP_API_URL } = process.env;
+const APP_API = REACT_APP_API_URL || "";
 
 class PostService {
   getPublishedPosts(after: string) {
     return new Promise((resolve, reject) => {
       axios
         .post(
-          API_URL,
+          APP_API,
           {
             query: `query
             {
@@ -23,6 +24,10 @@ class PostService {
                             author {
                                 id
                                 username
+                                email
+                            }
+                            postLikes {
+                                type
                             }
                         }
                     }

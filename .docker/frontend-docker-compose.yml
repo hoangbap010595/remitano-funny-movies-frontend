@@ -1,0 +1,42 @@
+version: '3.3'
+
+services:
+  remitano-funny-movies-frontend:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    container_name: remitano-funny-movies-frontend
+    restart: always
+    env_file: ../.env
+    environment:
+      - APP_NAME=$APP_NAME
+      - APP_ENV=$APP_ENV
+      - APP_KEY=$APP_KEY
+      - APP_DEBUG=$APP_DEBUG
+      - APP_URL=$APP_URL
+      - REDIRECT_HTTPS=$REDIRECT_HTTPS
+      - REACT_APP_API_URL=$REACT_APP_API_URL
+      - REACT_APP_WEBSOCKET_URL=$REACT_APP_WEBSOCKET_URL
+
+      # nginx-proxy
+      - VIRTUAL_HOST=$ADMIN_API_HOST
+      - VIRTUAL_NETWORK=$VIRTUAL_NETWORK
+      - VIRTUAL_PORT=$VIRTUAL_PORT
+      - LETSENCRYPT_HOST=$LETSENCRYPT_ADMIN_API_HOST
+      - LETSENCRYPT_EMAIL=$LETSENCRYPT_EMAIL
+    expose:
+      - 3000
+    volumes:
+      - remitano-funny-movies-frontend:/usr/src/app
+
+networks:
+  default:
+    external:
+      name: $DOCKER_NETWORK
+
+volumes:
+  remitano-funny-movies-frontend:
+    driver_opts:
+      type: none
+      device: $APP_VOLUME_CODE_MOUNT_PATH
+      o: bind,uid=1000,gid=1000,groups=1000

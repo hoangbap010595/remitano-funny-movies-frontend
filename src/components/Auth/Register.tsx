@@ -1,175 +1,199 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import axios from "axios";
-import { ToastContainer, toast, Flip } from "react-toastify";
+import { Card, Form, Input, Button, Typography } from "antd";
+import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
+import { ToastContainer, Flip } from "react-toastify";
+import authService from "../../services/auth.service";
+import appNotify from "../../common/app-notify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { useState } from "react";
+const { Title } = Typography;
 
 const Register = () => {
+  const [buttonRegisterLoading, setButtonRegisterLoading] =
+    useState<boolean>(false);
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    formState: { errors },
-  } = useForm();
-  const submitData = (data: any) => {
-    let params = {
-      firstname: data.firstname,
-      lastname: data.lastname,
-      email: data.email,
-      password: data.password,
-      confirmpassword: data.cpassword,
-    };
-    console.log(data);
-    axios
-      .post("http://localhost:4000/api/signup", params)
-      .then(function (response) {
-        toast.success(response.data.message, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: false,
-          progress: 0,
-          toastId: "my_toast",
-        });
-        reset();
-        setTimeout(() => {
-          navigate("/login");
-        }, 3000);
+  const onFinish = (values: any) => {
+    setButtonRegisterLoading(true);
+    console.log("Received values of form: ", values);
+    authService
+      .register(
+        values.lastname,
+        values.firstname,
+        values.username,
+        values.email,
+        values.password
+      )
+      .then((response: any) => {
+        if (!response.data) {
+          appNotify.notify(response.errors[0].message, "error");
+        }
+        appNotify.notify("Register successfully!", "success");
+        authService.setCurrentUser(response.data.signup);
+        navigate("/");
       })
-
-      .catch(function (error) {
-        console.log(error);
+      .catch((err) => {
+        console.log(err);
+        appNotify.notify("Register Error!!!", "error");
+      })
+      .finally(() => {
+        setButtonRegisterLoading(false);
       });
   };
+
   return (
-    <>
-      <div className="container">
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundImage: "url(bg-login.jpg)",
+        backgroundSize: "cover"
+      }}
+    >
+      <Card hoverable style={{ width: 400, backgroundColor: "#f4f4f4" }}>
         <div
-          className="row d-flex justify-content-center align-items-center"
-          style={{ height: "100vh" }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "20px",
+          }}
         >
-          <div className="card mb-3 mt-3 rounded" style={{ maxWidth: "500px" }}>
-            <div className="col-md-12">
-              <div className="card-body">
-                <h3 className="card-title text-center text-secondary mt-3 mb-3">
-                  Sign Up Form
-                </h3>
-                <form
-                  className="row"
-                  autoComplete="off"
-                  onSubmit={handleSubmit(submitData)}
-                >
-                  <div className="col-md-6">
-                    <div className="">
-                      <label className="form-label">Firstname</label>
-                      <input
-                        type="text"
-                        className="form-control form-control-sm"
-                        id="exampleFormControlInput1"
-                        {...register("firstname", {
-                          required: "Firstname is required!",
-                        })}
-                      />
-                      {errors.firstname && (
-                        <p className="text-danger" style={{ fontSize: 14 }}>
-                          {/* {errors.firstname.message} */}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="">
-                      <label className="form-label">Lastname</label>
-                      <input
-                        type="text"
-                        className="form-control form-control-sm"
-                        id="exampleFormControlInput2"
-                        {...register("lastname", {
-                          required: "Lastname is required!",
-                        })}
-                      />
-                      {errors.lastname && (
-                        <p className="text-danger" style={{ fontSize: 14 }}>
-                          {/* {errors.lastname.message} */}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="">
-                    <label className="form-label">Email</label>
-                    <input
-                      type="email"
-                      className="form-control form-control-sm"
-                      id="exampleFormControlInput3"
-                      {...register("email", { required: "Email is required!" })}
-                    />
-                    {errors.email && (
-                      <p className="text-danger" style={{ fontSize: 14 }}>
-                        {/* {errors.email.message} */}
-                      </p>
-                    )}
-                  </div>
-                  <div className="">
-                    <label className="form-label">Password</label>
-                    <input
-                      type="password"
-                      className="form-control form-control-sm"
-                      id="exampleFormControlInput5"
-                      {...register("password", {
-                        required: "Password is required!",
-                      })}
-                    />
-                    {errors.password && (
-                      <p className="text-danger" style={{ fontSize: 14 }}>
-                        {/* {errors.password.message} */}
-                      </p>
-                    )}
-                  </div>
-                  <div className="">
-                    <label className="form-label">Confirm Password</label>
-                    <input
-                      type="password"
-                      className="form-control form-control-sm"
-                      id="exampleFormControlInput6"
-                      {...register("cpassword", {
-                        required: "Confirm Password is required",
-
-                        validate: (value) =>
-                          value === watch("password") ||
-                          "Passwords don't match.",
-                      })}
-                    />
-                    {errors.cpassword && (
-                      <p className="text-danger" style={{ fontSize: 14 }}>
-                        {/* {errors.cpassword.message} */}
-                      </p>
-                    )}
-                  </div>
-                  <div className="text-center mt-4 ">
-                    <button
-                      className="btn btn-outline-primary text-center shadow-none mb-3"
-                      type="submit"
-                    >
-                      Submit
-                    </button>
-                    <p className="card-text">
-                      Already have an account?{" "}
-                      <Link style={{ textDecoration: "none" }} to={"/login"}>
-                        Log In
-                      </Link>
-                    </p>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+          <Title level={2}>REMITANO</Title>
         </div>
-      </div>
+        <Form
+          name="normal_login"
+          className="login-form"
+          initialValues={{
+            remember: true,
+          }}
+          onFinish={onFinish}
+        >
+          <Form.Item style={{ marginBottom: 0 }}>
+            <Form.Item
+              name="firstname"
+              rules={[{ required: true, message: "Fristname is not empty!" }]}
+              style={{ display: "inline-block", width: "calc(50% - 8px)" }}
+              hasFeedback
+            >
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                placeholder="Firstname"
+              />
+            </Form.Item>
+            <Form.Item
+              name="lastname"
+              rules={[{ required: true, message: "Lastname is not empty!" }]}
+              style={{
+                display: "inline-block",
+                width: "calc(50% - 2px)",
+                marginLeft: "10px",
+              }}
+              hasFeedback
+            >
+              <Input placeholder="Lastname" />
+            </Form.Item>
+          </Form.Item>
+          <Form.Item
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Username!",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Enter you username"
+            />
+          </Form.Item>
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Email!",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input
+              type="email"
+              prefix={<MailOutlined className="site-form-item-icon" />}
+              placeholder="Enter you email"
+            />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Password!",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Password"
+            />
+          </Form.Item>
+          <Form.Item
+            name="cpassword"
+            dependencies={["password"]}
+            rules={[
+              {
+                required: true,
+                message: "Please confirm your password!",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("The new password that you entered do not match!")
+                  );
+                },
+              }),
+            ]}
+            hasFeedback
+          >
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Confirm Password"
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="App-button-primary"
+              block
+              loading={buttonRegisterLoading}
+            >
+              Register
+            </Button>
+          </Form.Item>
+          <Form.Item
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "20px",
+            }}
+          >
+            Already have an account?{" "}
+            <Link style={{ textDecoration: "none" }} to={"/login"}>
+              Log In
+            </Link>
+          </Form.Item>
+        </Form>
+      </Card>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -182,7 +206,7 @@ const Register = () => {
         limit={1}
         transition={Flip}
       />
-    </>
+    </div>
   );
 };
 

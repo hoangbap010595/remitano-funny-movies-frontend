@@ -29,8 +29,34 @@
 }
 
 .App-color-white {
-    color: rgb(255, 255, 255) !important;
-  }
+  color: rgb(255, 255, 255) !important;
+}
+
+.App-button-primary {
+  background-color: rgb(155, 89, 182);
+  border-color: rgb(155, 89, 182);
+  min-height: 40px;
+  transition-duration: 0s;
+}
+.App-button-primary:hover {
+  background-color: rgb(150, 62, 185) !important;
+  border-color: rgb(126, 40, 160) !important;
+}
+
+.video-responsive {
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+  height: 0;
+}
+
+.video-responsive iframe {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
 
 @keyframes App-logo-spin {
   from {

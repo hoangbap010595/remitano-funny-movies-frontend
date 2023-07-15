@@ -1,22 +1,24 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/graphql";
-
+const { REACT_APP_API_URL } = process.env;
+const APP_API = REACT_APP_API_URL || "";
 class AuthService {
   login(username: string, password: string) {
     return new Promise((resolve, reject) => {
       axios
         .post(
-          API_URL,
+          APP_API || "",
           {
             query: `mutation
                   {
                       login(data: { email: "${username}", password: "${password}" }) {
                           accessToken
                           user {
-                              id
-                              username
-                              email
+                            id
+                            username
+                            email
+                            firstname
+                            lastname
                           }
                       }
                   }`,
@@ -32,39 +34,47 @@ class AuthService {
     });
   }
 
-  register(username: string, email: string, password: string) {
-    return axios.post(
-      API_URL,
-      {
-        query: `mutation 
-        {
-            login(data: { 
-                $username: String!
-                $email: String!
-                $firstname: String!
-                $lastname: String!
-                $password: String!
-            }) {
-                accessToken
-                user {
-                    id
-                    email
-                    firstname
-                    lastname
+  register(
+    firstname: string,
+    lastname: string,
+    username: string,
+    email: string,
+    password: string
+  ) {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(
+          APP_API,
+          {
+            query: `mutation 
+            {
+                signup(data: { 
+                    username: "${username}"
+                    email: "${email}"
+                    firstname: "${firstname}"
+                    lastname: "${lastname}"
+                    password: "${password}"
+                }) {
+                    accessToken
+                    user {
+                        id
+                        username
+                        email
+                        firstname
+                        lastname
+                    }
                 }
-            }
-        }`,
-        variables: {
-          email: username,
-          password: password,
-        },
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+            }`,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => resolve(response.data))
+        .catch((err) => reject(err));
+    });
   }
 
   logout() {

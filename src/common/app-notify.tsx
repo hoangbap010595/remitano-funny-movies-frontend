@@ -1,30 +1,23 @@
-import { toast } from "react-toastify";
+import { ToastContent, TypeOptions, toast } from "react-toastify";
 const { v4: uuidv4 } = require("uuid");
 
 class AppNotify {
-  notifyError(message: string) {
-    toast.error(message, {
+  notify(message: string, type?: TypeOptions) {
+    toast(message, {
       position: "top-right",
       autoClose: 3000,
-      hideProgressBar: true,
+      type: type,
       closeOnClick: true,
       pauseOnHover: true,
-      draggable: false,
-      progress: 0,
-      toastId: "toast_id",
+      toastId: uuidv4().toString(),
     });
   }
 
-  notifySuccess(message: string) {
-    toast.success(message, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: true,
-      closeOnClick: true,
+  notifyCustom(content: ToastContent) {
+    toast(content, {
+      closeOnClick: false,
       pauseOnHover: true,
-      draggable: false,
-      progress: 0,
-      toastId: "toast_id",
+      toastId: uuidv4().toString(),
     });
   }
 }
