@@ -1,6 +1,6 @@
 export DOCKER_NETWORK='nginx-proxy'
 
-export ADMIN_API_HOST='remitano-funny-movies-frontend.thocbeauty.com'
+export ADMIN_API_HOST='rfm-demo-fe.thocbeauty.com'
 export VIRTUAL_NETWORK='nginx-proxy'
 export VIRTUAL_PORT='3000'
 export LETSENCRYPT_ADMIN_API_HOST="$ADMIN_API_HOST"
