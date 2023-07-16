@@ -15,11 +15,11 @@ const Message = ({
 }) => {
   const [reactChose, setReactChose] = useState<RFMReactType>();
   //   console.log(payload);
-  const onClickLikePost = () => {
+  const onClickLikePost = (e: any) => {
     likeAction(payload.postId);
     setReactChose(RFMReactType.LIKE);
   };
-  const onClickDislikePost = () => {
+  const onClickDislikePost = (e: any) => {
     dislikeAction(payload.postId);
     setReactChose(RFMReactType.DISLIKE);
   };
@@ -42,12 +42,14 @@ const Message = ({
         <Button
           type={reactChose === RFMReactType.LIKE ? "primary" : "ghost"}
           shape="circle"
+          name="like"
           icon={<LikeOutlined />}
           onClick={onClickLikePost}
         />
         <Button
           type={reactChose === RFMReactType.DISLIKE ? "primary" : "ghost"}
           shape="circle"
+          name="dislike"
           icon={<DislikeOutlined />}
           onClick={onClickDislikePost}
         />

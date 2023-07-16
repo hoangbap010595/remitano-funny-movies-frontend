@@ -103,6 +103,7 @@ const Login = (): JSX.Element => {
           <Form.Item>
             <Button
               type="primary"
+              name="login"
               htmlType="submit"
               className="App-button-primary"
               block

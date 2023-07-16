@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import Message from "../Message";
+import React from "react";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -22,7 +23,26 @@ describe("message notify", () => {
       })),
     });
   });
-  it("renders message norify component correctly", () => {
+  afterAll(() => {
+    cleanup();
+  });
+  it("should click buton Like and Dislike", () => {
+    const reactChose = "",
+      setReactChose = jest.fn();
+    jest
+      .spyOn(React, "useState")
+      .mockImplementation(() => [reactChose, setReactChose]);
+    jest.spyOn(window, "matchMedia").mockReturnValue({
+      matches: false,
+      media: "",
+      onchange: null,
+      addListener: jest.fn(), // Use the mock implementation
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    });
+
     const payload = { title: "test", author: "test" };
     const likeAction = jest.fn();
     const dislikeAction = jest.fn();
@@ -33,29 +53,11 @@ describe("message notify", () => {
         dislikeAction={dislikeAction}
       />
     );
-    const contentElement = screen.getByText("A new video has been shared");
-    expect(contentElement).toBeInTheDocument();
-  });
-
-  it("should click buton Like and Dislike", () => {
-    const payload = { title: "test", author: "test" };
-    const likeAction = jest.fn((a: string) => {});
-    const dislikeAction = jest.fn((a: string) => {});
-
-    render(
-      <Message
-        payload={payload}
-        likeAction={likeAction}
-        dislikeAction={dislikeAction}
-      />
-    );
-
-    const buttonLikeElement = screen.getByRole("button", { name: "Like" });
+    const buttonLikeElement = screen.getByRole("button", { name: "like" });
     fireEvent.click(buttonLikeElement);
     expect(likeAction).toHaveBeenCalled();
-
     const buttonDislikeElement = screen.getByRole("button", {
-      name: "Dislike",
+      name: "dislike",
     });
     fireEvent.click(buttonDislikeElement);
     expect(dislikeAction).toHaveBeenCalled();

@@ -172,6 +172,7 @@ const Register = () => {
           <Form.Item>
             <Button
               type="primary"
+              name="register"
               htmlType="submit"
               className="App-button-primary"
               block
