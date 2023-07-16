@@ -55,14 +55,14 @@ const BaseLayout = ({ children }: { children: React.ReactNode }) => {
               "success"
             );
           } else {
+            appNotify.notifyCustom(
+                <Message
+                  payload={payload}
+                  likeAction={likeAction}
+                  dislikeAction={dislikeAction}
+                />
+              );
           }
-          appNotify.notifyCustom(
-            <Message
-              payload={payload}
-              likeAction={likeAction}
-              dislikeAction={dislikeAction}
-            />
-          );
           break;
         case RFMEventType.INIT:
           appNotify.notify(payload.message, "success");
