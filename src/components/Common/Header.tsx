@@ -54,7 +54,7 @@ const AppHeader = () => {
       </div>
       <Space size={"small"}>
         <Text className="App-color-white">
-          Welcome <b>{currentUser.user.email} </b>
+          Welcome <b>{currentUser?.user?.email} </b>
         </Text>
         <Button
           type="primary"

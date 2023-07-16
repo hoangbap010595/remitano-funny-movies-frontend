@@ -58,6 +58,7 @@ const Login = (): JSX.Element => {
         <Form
           name="normal_login"
           className="login-form"
+          data-testid="login-form"
           initialValues={{
             remember: true,
           }}

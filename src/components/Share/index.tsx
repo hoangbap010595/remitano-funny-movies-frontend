@@ -3,16 +3,16 @@ import { Card, Form, Input, Button, Typography } from "antd";
 import { LinkOutlined } from "@ant-design/icons";
 import BaseLayout from "../Common/BaseLayout";
 import appNotify from "../../common/app-notify";
-import { useContext, useState } from "react";
-import { WebSocketContext } from "../../hooks/WSContext";
+import { useState } from "react";
 import { RFMEventType } from "../../common/app-model";
+import { useWS } from "../../hooks/useWS";
 const { Title } = Typography;
 
 const Share = () => {
   const [form] = Form.useForm();
   const [buttonShareLoading, setButtonShareLoading] = useState<boolean>(false);
 
-  const socket = useContext(WebSocketContext);
+  const socket = useWS();
   const onFinish = (values: any) => {
     setButtonShareLoading(true);
     console.log("Received values of form: ", values);

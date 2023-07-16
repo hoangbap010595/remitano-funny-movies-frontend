@@ -1,8 +1,7 @@
 import { Layout, theme } from "antd";
 import { ToastContainer, Flip } from "react-toastify";
 import AppHeader from "./Header";
-import { useContext, useEffect } from "react";
-import { WebSocketContext } from "../../hooks/WSContext";
+import { useEffect } from "react";
 import appNotify from "../../common/app-notify";
 import {
   RFMDataEvent,
@@ -11,6 +10,7 @@ import {
 } from "../../common/app-model";
 import authService from "../../services/auth.service";
 import Message from "./Message";
+import { useWS } from "../../hooks/useWS";
 
 const { Content } = Layout;
 
@@ -19,7 +19,7 @@ const BaseLayout = ({ children }: { children: React.ReactNode }) => {
     token: { colorBgContainer },
   } = theme.useToken();
   const currentUser = authService.getCurrentUser();
-  const socket = useContext(WebSocketContext);
+  const socket = useWS();
 
   const likeAction = (postId: string) => {
     console.log("likeAction: ", postId);
@@ -36,32 +36,32 @@ const BaseLayout = ({ children }: { children: React.ReactNode }) => {
     });
   };
   useEffect(() => {
-    socket.on("connect", () => {
+    socket?.on("connect", () => {
       console.log("Connected");
       socket.emit("events", {
         action: RFMEventType.INIT,
-        payload: { token: currentUser.accessToken },
+        payload: { token: currentUser?.accessToken },
       });
     });
-    socket.on("onMessage", (message: RFMDataEvent) => {
+    socket?.on("onMessage", (message: RFMDataEvent) => {
       console.log("onMessage event received!");
       console.log(message);
       const payload = message.payload;
       switch (message.action) {
         case RFMEventType.NOTIFY_SHARE_VIDEO:
-          if (currentUser.user.email === payload.author) {
+          if (currentUser?.user?.email === payload.data.author) {
             appNotify.notify(
-              `Your movie "${payload.title}" has been shared!!!`,
-              "success"
+              payload.message,
+              payload.error === 0 ? "success" : "error"
             );
           } else {
             appNotify.notifyCustom(
-                <Message
-                  payload={payload}
-                  likeAction={likeAction}
-                  dislikeAction={dislikeAction}
-                />
-              );
+              <Message
+                payload={payload.data}
+                likeAction={likeAction}
+                dislikeAction={dislikeAction}
+              />
+            );
           }
           break;
         case RFMEventType.INIT:
@@ -75,8 +75,8 @@ const BaseLayout = ({ children }: { children: React.ReactNode }) => {
 
     return () => {
       console.log("Unregistering Events!");
-      socket.off("connect");
-      socket.off("onMessage");
+      socket?.off("connect");
+      socket?.off("onMessage");
     };
   }, [socket, currentUser]);
 

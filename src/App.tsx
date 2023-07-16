@@ -9,13 +9,12 @@ import Share from "./components/Share";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/funny-videos">
       <Routes>
         <Route path="/" element={<PrivateRoute />}>
           <Route path="/" element={<Home />} />
           <Route path="/share" element={<Share />} />
         </Route>
-        {/* <RestrictedRoute exact path="/login" Component={Login} /> */}
         <Route path="/login" Component={Login} />
         <Route path="/register" Component={Register} />
       </Routes>

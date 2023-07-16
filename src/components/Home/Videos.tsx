@@ -39,7 +39,6 @@ const Videos = () => {
     postService
       .getPublishedPosts("")
       .then((res: any) => {
-        console.log(res);
         setInitLoading(false);
         setData(res.data.publishedPosts);
         setList(res.data.publishedPosts.edges);
@@ -70,7 +69,6 @@ const Videos = () => {
         data?.pageInfo.hasNextPage ? data.pageInfo.endCursor || "" : ""
       )
       .then((res: any) => {
-        console.log(res);
         const newPublishedPosts = res.data.publishedPosts;
         const newEdgesData = list.concat(newPublishedPosts.edges);
         setList(newEdgesData);

@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const { REACT_APP_API_URL } = process.env;
 const APP_API = REACT_APP_API_URL || "";
 class AuthService {
