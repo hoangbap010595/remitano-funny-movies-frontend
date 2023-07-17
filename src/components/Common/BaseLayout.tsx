@@ -36,14 +36,14 @@ const BaseLayout = ({ children }: { children: React.ReactNode }) => {
     });
   };
   useEffect(() => {
-    socket?.on("connect", () => {
+    socket.on("connect", () => {
       console.log("Connected");
       socket.emit("events", {
         action: RFMEventType.INIT,
         payload: { token: currentUser?.accessToken },
       });
     });
-    socket?.on("onMessage", (message: RFMDataEvent) => {
+    socket.on("onMessage", (message: RFMDataEvent) => {
       console.log("onMessage event received!");
       console.log(message);
       const payload = message.payload;
@@ -75,10 +75,10 @@ const BaseLayout = ({ children }: { children: React.ReactNode }) => {
 
     return () => {
       console.log("Unregistering Events!");
-      socket?.off("connect");
-      socket?.off("onMessage");
+      //   socket.off("connect");
+      //   socket.off("onMessage");
     };
-  }, [socket]);
+  }, []);
 
   return (
     <>

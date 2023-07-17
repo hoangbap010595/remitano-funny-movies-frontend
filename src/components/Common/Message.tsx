@@ -14,14 +14,18 @@ const Message = ({
   dislikeAction: any;
 }) => {
   const [reactChose, setReactChose] = useState<RFMReactType>();
-  //   console.log(payload);
+  console.log(payload);
   const onClickLikePost = (e: any) => {
-    likeAction(payload.postId);
-    setReactChose(RFMReactType.LIKE);
+    if (payload.postId !== "" && payload.postId !== undefined) {
+      likeAction(payload.postId);
+      setReactChose(RFMReactType.LIKE);
+    }
   };
   const onClickDislikePost = (e: any) => {
-    dislikeAction(payload.postId);
-    setReactChose(RFMReactType.DISLIKE);
+    if (payload.postId !== "" && payload.postId !== undefined) {
+      dislikeAction(payload.postId);
+      setReactChose(RFMReactType.DISLIKE);
+    }
   };
   return (
     <div>
