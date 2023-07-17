@@ -122,7 +122,7 @@ const Register = () => {
             <Input
               type="email"
               prefix={<MailOutlined className="site-form-item-icon" />}
-              placeholder="Enter you email"
+              placeholder="Enter your email"
             />
           </Form.Item>
           <Form.Item
@@ -138,7 +138,8 @@ const Register = () => {
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
-              placeholder="Password"
+              id="password"
+              placeholder="Enter your Password"
             />
           </Form.Item>
           <Form.Item
@@ -165,6 +166,7 @@ const Register = () => {
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
+              id="cpassword"
               placeholder="Confirm Password"
             />
           </Form.Item>

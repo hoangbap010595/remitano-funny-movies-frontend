@@ -7,7 +7,7 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => jest.fn(),
 }));
 
-describe("register test", () => {
+describe("home test", () => {
   beforeAll(() => {
     Object.defineProperty(window, "matchMedia", {
       writable: true,
