@@ -75,8 +75,8 @@ const BaseLayout = ({ children }: { children: React.ReactNode }) => {
 
     return () => {
       console.log("Unregistering Events!");
-      //   socket.off("connect");
-      //   socket.off("onMessage");
+      socket.off("connect");
+      socket.off("onMessage");
     };
   }, []);
 
