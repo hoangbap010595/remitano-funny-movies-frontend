@@ -16,4 +16,4 @@ export REDIRECT_HTTPS='true'
 export APP_VOLUME_CODE_MOUNT_PATH="/home/applications/data/${APP_NAME}/code"
 
 export REACT_APP_API_URL="https://rfm-demo-be.thocbeauty.com/graphql"
-export REACT_APP_WEBSOCKET_URL="https://rfm-demo-ws.thocbeauty.com"
+export REACT_APP_WEBSOCKET_URL="wss://rfm-demo-ws.thocbeauty.com"

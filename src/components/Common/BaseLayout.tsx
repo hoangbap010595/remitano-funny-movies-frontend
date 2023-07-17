@@ -49,7 +49,7 @@ const BaseLayout = ({ children }: { children: React.ReactNode }) => {
       const payload = message.payload;
       switch (message.action) {
         case RFMEventType.NOTIFY_SHARE_VIDEO:
-          if (currentUser?.user?.email === payload.data.author) {
+          if (currentUser.user.email === payload.data.author) {
             appNotify.notify(
               payload.message,
               payload.error === 0 ? "success" : "error"
@@ -78,7 +78,7 @@ const BaseLayout = ({ children }: { children: React.ReactNode }) => {
       socket?.off("connect");
       socket?.off("onMessage");
     };
-  }, [socket, currentUser]);
+  }, [socket]);
 
   return (
     <>
