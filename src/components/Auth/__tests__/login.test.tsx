@@ -1,6 +1,8 @@
+/* eslint-disable testing-library/no-unnecessary-act */
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import Login from "../Login";
 import { BrowserRouter } from "react-router-dom";
+import { act } from "react-dom/test-utils";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -46,7 +48,7 @@ describe("login test", () => {
     expect(contentElement).toBeInTheDocument();
   });
 
-  it("typing into input email and passsword and click login", () => {
+  it("typing into input email and passsword and click login", async () => {
     jest.spyOn(window, "matchMedia").mockReturnValue({
       matches: false,
       media: "",
@@ -78,6 +80,11 @@ describe("login test", () => {
     expect(passwordElement).toBeInTheDocument();
 
     const buttonElement = screen.getByRole("button", { name: /Log in/i });
-    fireEvent.click(buttonElement);
+
+    await act(() => {
+      fireEvent.click(buttonElement);
+    });
+
+    expect(contentElement).toBeInTheDocument();
   });
 });

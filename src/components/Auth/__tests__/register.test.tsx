@@ -1,6 +1,8 @@
+/* eslint-disable testing-library/no-unnecessary-act */
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import Register from "../Register";
 import { BrowserRouter } from "react-router-dom";
+import { act } from "react-dom/test-utils";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -65,7 +67,8 @@ describe("register test", () => {
     const contentElement = screen.getByText("REMITANO");
     expect(contentElement).toBeInTheDocument();
 
-    const inputUsernameElement = screen.getByPlaceholderText(/Enter you username/i);
+    const inputUsernameElement =
+      screen.getByPlaceholderText(/Enter you username/i);
     fireEvent.change(inputUsernameElement, {
       target: { value: "test" },
     });
@@ -79,17 +82,23 @@ describe("register test", () => {
     const emailElement = screen.getByDisplayValue(/test@gmail.com/i);
     expect(emailElement).toBeInTheDocument();
 
-    const inputPasswordElement = screen.getByPlaceholderText(/Enter your Password/i);
+    const inputPasswordElement =
+      screen.getByPlaceholderText(/Enter your Password/i);
     fireEvent.change(inputPasswordElement, { target: { value: "secret@123" } });
     const passwordElement = screen.getByDisplayValue(/secret@123/i);
     expect(passwordElement).toBeInTheDocument();
 
-    const inputCPasswordElement = screen.getByPlaceholderText(/Confirm Password/i);
-    fireEvent.change(inputCPasswordElement, { target: { value: "secret@1234" } });
+    const inputCPasswordElement =
+      screen.getByPlaceholderText(/Confirm Password/i);
+    fireEvent.change(inputCPasswordElement, {
+      target: { value: "secret@1234" },
+    });
     const cPasswordElement = screen.getByDisplayValue(/secret@1234/i);
     expect(cPasswordElement).toBeInTheDocument();
 
     const buttonElement = screen.getByRole("button", { name: /Register/i });
-    fireEvent.click(buttonElement);
+    act(() => {
+      fireEvent.click(buttonElement);
+    });
   });
 });

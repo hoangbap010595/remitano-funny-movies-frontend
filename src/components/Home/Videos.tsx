@@ -25,9 +25,6 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
     <b>{text}</b> {React.createElement(icon)}
   </div>
 );
-const gridStyle: React.CSSProperties = {
-  width: "25%",
-};
 
 const Videos = () => {
   const [initLoading, setInitLoading] = useState(true);
@@ -101,7 +98,6 @@ const Videos = () => {
       loading={initLoading}
       itemLayout="vertical"
       size="large"
-      style={{ width: "72%" }}
       split={false}
       loadMore={loadMore}
       dataSource={list}
@@ -109,13 +105,16 @@ const Videos = () => {
         <List.Item>
           <Skeleton avatar title={false} loading={item.loading} active>
             <Card hoverable>
-              <Card.Grid style={gridStyle}>
+              <Card.Grid className="demo-loadmore-list-video">
                 <YoutubeEmbed
                   src={item.node?.link || ""}
                   title={item.node?.title || "No title"}
                 />
               </Card.Grid>
-              <Card.Grid style={{ width: "75%" }} hoverable={false}>
+              <Card.Grid
+                className="demo-loadmore-list-detail"
+                hoverable={false}
+              >
                 <Row>
                   <Col span={24}>
                     <Text
@@ -159,7 +158,7 @@ const Videos = () => {
                     <Text style={{}}>Description:</Text>
                     <br />
                     <Paragraph
-                      ellipsis={{ rows: 3, expandable: true, symbol: "more" }}
+                      ellipsis={{ rows: 4, expandable: true, symbol: "more" }}
                     >
                       {item.node.content}
                     </Paragraph>

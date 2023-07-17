@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/no-unnecessary-act */
 import {
   cleanup,
   fireEvent,
@@ -9,6 +10,7 @@ import Share from "../index";
 import { BrowserRouter } from "react-router-dom";
 import { useWS } from "../../../hooks/useWS";
 import { Socket } from "socket.io-client";
+import { act } from "react-dom/test-utils";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -59,6 +61,12 @@ describe("share test", () => {
       removeEventListener: jest.fn(),
       dispatchEvent: jest.fn(),
     });
+    (useWS as jest.Mock).mockReturnValue({
+      emit: jest.fn(),
+      on: jest.fn(),
+      off: jest.fn(),
+      close: jest.fn(),
+    });
     render(
       <BrowserRouter basename="/">
         <Share />
@@ -106,7 +114,9 @@ describe("share test", () => {
     expect(urlElement).toBeInTheDocument();
 
     const buttonElement = screen.getByRole("button", { name: "Share" });
-    fireEvent.click(buttonElement);
+    act(() => {
+      fireEvent.click(buttonElement);
+    });
     // console.log(buttonElement);
 
     // Send data to the server

@@ -58,6 +58,35 @@
   position: absolute;
 }
 
+.demo-loadmore-list-video {
+  width: 35% !important;
+}
+.demo-loadmore-list-detail {
+  width: 65% !important;
+}
+
+@media (min-width: 1601px) {
+  .demo-loadmore-list {
+    width: 75% !important;
+  }
+}
+@media (max-width: 1600px) {
+  .demo-loadmore-list {
+    width: 95% !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .demo-loadmore-list {
+    width: 100% !important;
+  }
+
+  .demo-loadmore-list-video,
+  .demo-loadmore-list-detail {
+    width: 100% !important;
+  }
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
