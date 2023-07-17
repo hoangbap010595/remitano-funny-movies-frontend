@@ -9,7 +9,7 @@ import Share from "./components/Share";
 
 function App() {
   return (
-    <BrowserRouter basename="/funny-videos">
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<PrivateRoute />}>
           <Route path="/" element={<Home />} />
